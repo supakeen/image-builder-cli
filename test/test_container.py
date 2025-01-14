@@ -14,7 +14,7 @@ def test_container_builds_image(tmp_path, build_container):
         "-v", f"{output_dir}:/output",
         build_container,
         "build",
-        "minimal-raw",
+        "--type", "minimal-raw",
         "--distro", "centos-9"
     ])
     arch = "x86_64"

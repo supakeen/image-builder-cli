@@ -163,7 +163,7 @@ func TestManifestIntegrationSmoke(t *testing.T) {
 
 	restore = main.MockOsArgs([]string{
 		"manifest",
-		"qcow2",
+		"--type=qcow2",
 		"--arch=x86_64",
 		"--distro=centos-9",
 		makeTestBlueprint(t, testBlueprint),
@@ -199,7 +199,7 @@ func TestManifestIntegrationCrossArch(t *testing.T) {
 
 	restore = main.MockOsArgs([]string{
 		"manifest",
-		"tar",
+		"--type=tar",
 		"--distro", "centos-9",
 		"--arch", "s390x",
 	})
@@ -240,7 +240,7 @@ func TestManifestIntegrationOstreeSmoke(t *testing.T) {
 	assert.NoError(t, err)
 	restore = main.MockOsArgs([]string{
 		"manifest",
-		"iot-raw-image",
+		"--type=iot-raw-image",
 		"--arch=x86_64",
 		"--distro=fedora-40",
 		"--ostree-url=" + strings.SplitN(string(body), "\n", 2)[0],
@@ -282,11 +282,11 @@ func TestManifestIntegrationOstreeSmokeErrors(t *testing.T) {
 		expectedErr string
 	}{
 		{
-			[]string{"iot-raw-image"},
+			[]string{"--type=iot-raw-image"},
 			`iot-raw-image: ostree commit URL required`,
 		},
 		{
-			[]string{"qcow2", "--ostree-url=http://example.com/"},
+			[]string{"--type=qcow2", "--ostree-url=http://example.com/"},
 			`OSTree is not supported for "qcow2"`,
 		},
 	} {
@@ -317,7 +317,7 @@ func TestBuildIntegrationHappy(t *testing.T) {
 	tmpdir := t.TempDir()
 	restore = main.MockOsArgs([]string{
 		"build",
-		"qcow2",
+		"--type=qcow2",
 		makeTestBlueprint(t, testBlueprint),
 		"--distro", "centos-9",
 		"--store", tmpdir,
@@ -370,7 +370,7 @@ func TestBuildIntegrationErrors(t *testing.T) {
 
 	restore = main.MockOsArgs([]string{
 		"build",
-		"qcow2",
+		"--type=qcow2",
 		makeTestBlueprint(t, testBlueprint),
 		"--distro", "centos-9",
 	})

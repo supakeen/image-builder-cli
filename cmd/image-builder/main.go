@@ -64,6 +64,15 @@ func ostreeImageOptions(cmd *cobra.Command) (*ostree.ImageOptions, error) {
 }
 
 func cmdManifestWrapper(cmd *cobra.Command, args []string, w io.Writer, archChecker func(string) error) (*imagefilter.Result, error) {
+	imageType, err := cmd.Flags().GetString("type")
+	if err != nil {
+		return nil, err
+	}
+
+	if imageType == "" {
+		return nil, fmt.Errorf("type is required")
+	}
+
 	dataDir, err := cmd.Flags().GetString("datadir")
 	if err != nil {
 		return nil, err
@@ -85,9 +94,8 @@ func cmdManifestWrapper(cmd *cobra.Command, args []string, w io.Writer, archChec
 	}
 
 	var blueprintPath string
-	imgTypeStr := args[0]
-	if len(args) > 1 {
-		blueprintPath = args[1]
+	if len(args) > 0 {
+		blueprintPath = args[0]
 	}
 	bp, err := blueprintload.Load(blueprintPath)
 	if err != nil {
@@ -98,7 +106,7 @@ func cmdManifestWrapper(cmd *cobra.Command, args []string, w io.Writer, archChec
 		return nil, err
 	}
 
-	res, err := getOneImage(dataDir, distroStr, imgTypeStr, archStr)
+	res, err := getOneImage(dataDir, distroStr, imageType, archStr)
 	if err != nil {
 		return nil, err
 	}
@@ -173,11 +181,12 @@ operating sytsems like centos and RHEL with easy customizations support.`,
 		Short:        "Build manifest for the given distro/image-type, e.g. centos-9 qcow2",
 		RunE:         cmdManifest,
 		SilenceUsage: true,
-		Args:         cobra.RangeArgs(1, 2),
+		Args:         cobra.RangeArgs(0, 1),
 		Hidden:       true,
 	}
 	manifestCmd.Flags().String("arch", "", `build manifest for a different architecture`)
 	manifestCmd.Flags().String("distro", "", `build manifest for a different distroname (e.g. centos-9)`)
+	manifestCmd.Flags().String("type", "", `image type to build see list-images for available types`)
 	manifestCmd.Flags().String("ostree-ref", "", `OSTREE reference`)
 	manifestCmd.Flags().String("ostree-parent", "", `OSTREE parent`)
 	manifestCmd.Flags().String("ostree-url", "", `OSTREE url`)
@@ -188,7 +197,7 @@ operating sytsems like centos and RHEL with easy customizations support.`,
 		Short:        "Build the given distro/image-type, e.g. centos-9 qcow2",
 		RunE:         cmdBuild,
 		SilenceUsage: true,
-		Args:         cobra.RangeArgs(1, 2),
+		Args:         cobra.RangeArgs(0, 1),
 	}
 	buildCmd.Flags().AddFlagSet(manifestCmd.Flags())
 	// XXX: add --rpmmd cache too and put under /var/cache/image-builder/dnf

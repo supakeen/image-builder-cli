@@ -285,7 +285,7 @@ func cmdManifestWrapper(pbar progress.ProgressBar, cmd *cobra.Command, args []st
 		// from bib so instead of introducing subtle incompatibilities just error
 		// here
 		if imgTypeStr == "anaconda-iso" {
-			return nil, fmt.Errorf(`image type bootc "anaconda-iso" is not supported with image-builder, please consider switching to "bootc-installer" or use bootc-image-builder`)
+			return nil, fmt.Errorf(`image type bootc "anaconda-iso" is not supported with image-builder, please consider switching to "bootc-generic-iso" or use bootc-image-builder`)
 		}
 		bootcInfo, err := bootc.ResolveBootcInfo(bootcRef)
 		if err != nil {

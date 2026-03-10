@@ -144,7 +144,7 @@ func TestBootcAnacondaIsoNotSupportedForImageBuilder(t *testing.T) {
 	defer restore()
 
 	err := main.Run()
-	assert.EqualError(t, err, `image type bootc "anaconda-iso" is not supported with image-builder, please consider switching to "bootc-installer" or use bootc-image-builder`)
+	assert.EqualError(t, err, `image type bootc "anaconda-iso" is not supported with image-builder, please consider switching to "bootc-generic-iso" or use bootc-image-builder`)
 }
 
 func hasDepsolveDnf() bool {
